@@ -1,0 +1,13 @@
+services:
+  fastapi:
+    container_name: fastapi-oauth-demo
+    volumes:
+      - ./app:/app/
+    tty: true
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: ${TARGET:-dev}
+    ports:
+      - 8080:8080
+      - 5678:5678
