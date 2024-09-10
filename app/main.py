@@ -25,13 +25,13 @@ app.add_middleware(
 
 @app.get("/auth/google_auth")
 async def google_auth(response: Response):
-    """Create Google Auth URL
+    """Generate Google Auth URL
 
     Returns:
         str: URL
     """
 
-    # Create state for prevent CSRF attack
+    # Generate state for prevent CSRF attack
     state = secrets.token_urlsafe()
 
     google_auth_url = (
