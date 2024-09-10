@@ -1,7 +1,7 @@
 import requests
 from fastapi import FastAPI, Form, HTTPException, Response, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import PlainTextResponse, RedirectResponse
+from fastapi.responses import RedirectResponse
 from settings import Settings
 
 app = FastAPI()
@@ -12,10 +12,10 @@ settings = Settings()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
+        settings.FRONT_URL,
     ],
     allow_credentials=True,
-    allow_methods=["GET", "OPTIONS"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -36,7 +36,7 @@ async def google_auth(response: Response):
         f"response_type=code&"
         f"scope=email"
     )
-    response = PlainTextResponse(google_auth_url)
+    response = RedirectResponse(google_auth_url, status_code=302)
 
     return response
 
@@ -72,7 +72,7 @@ async def google_auth_callback2(response: Response, code: str = Form()):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
-    response = RedirectResponse("http://localhost:5173/me", status_code=302)
+    response = RedirectResponse(f"{settings.FRONT_URL}/me", status_code=302)
 
     response.set_cookie(
         key="token",
