@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import apple, google
+from routers import apple, auth, google
 from settings import Settings
 
 app = FastAPI()
@@ -21,3 +21,4 @@ app.add_middleware(
 
 app.include_router(google.router, tags=["Google Auth"])
 app.include_router(apple.router, tags=["Apple Auth"])
+app.include_router(auth.router, tags=["JWT token"])
