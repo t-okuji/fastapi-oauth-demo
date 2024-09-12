@@ -30,7 +30,7 @@ COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin/fastapi /usr/local/bin/fastapi
 # change lambda-web-adapter listen port (default port 8080)
 ENV PORT 8000
-COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.3 /lambda-adapter /opt/extensions/lambda-adapter
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.4 /lambda-adapter /opt/extensions/lambda-adapter
 COPY ./app/. /app/
 WORKDIR /app
 ENTRYPOINT [ "fastapi" ]

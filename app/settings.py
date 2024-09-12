@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    SECRET_KEY: str
     FRONT_URL: str
     GOOGLE_CLIENT_ID: str
     GOOGLE_CLIENT_SECRET: str
@@ -13,3 +14,4 @@ class Settings(BaseSettings):
     APPLE_REDIRECT_URI: str
     APPLE_AUTH_URI: str
     APPLE_TOKEN_URI: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int

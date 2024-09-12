@@ -1,7 +1,9 @@
 import secrets
+from datetime import timedelta
 from typing import Annotated
 
 import requests
+from core.auth import create_access_token, verify_apple_id_token
 from fastapi import APIRouter, Cookie, Form, HTTPException, Response, status
 from fastapi.responses import RedirectResponse
 from settings import Settings
@@ -86,13 +88,24 @@ async def apple_auth_callback(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
+    # Get claim
+    id_token = auth_response.json()["id_token"]
+    user_info = await verify_apple_id_token(id_token=id_token)
+
+    # Generate access_token
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user_info.sub, "email": user_info.email},
+        expires_delta=access_token_expires,
+    )
+
     response = RedirectResponse(f"{settings.FRONT_URL}/me", status_code=302)
 
     response.set_cookie(
-        key="token",
-        value="dummy_token",
+        key="access_token",
+        value=access_token,
         httponly=True,
         secure=True,
-        samesite="Lax",
+        samesite="None",  # When developing (Lax for production)
     )
     return response
